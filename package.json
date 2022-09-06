@@ -5,8 +5,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 4173",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "deploy": "npm run build && rsync -av --delete dist/ liba19@ssh.student.bth.se:www/editor"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^35.0.1",
