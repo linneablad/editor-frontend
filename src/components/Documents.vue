@@ -85,8 +85,8 @@ export default {
       <tr v-for="(document, index) in documents" v-bind:key="index">
         <td>{{ document.name }}</td>
         <td>
-          <button @click="editDoc=document" class="button is-link">Edit</button>
-          <button @click="deleteDoc(document)" class="button is-danger">Delete</button>
+          <button @click="editDoc=document" class="button is-link edit">Edit</button>
+          <button @click="deleteDoc(document)" class="button is-danger delete">Delete</button>
         </td>
       </tr>
     </table>
