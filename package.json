@@ -6,7 +6,8 @@
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "deploy": "npm run build && rsync -av --delete -e \"ssh -i $HOME/.ssh/dbwebb\" dist/ liba19@ssh.student.bth.se:www/editor"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^35.0.1",
