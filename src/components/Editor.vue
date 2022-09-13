@@ -1,10 +1,10 @@
 <script>
   import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
   
-  let baseUrl = window.location.href.includes("localhost") ?
-        "http://localhost:1337" :
-        "https://jsramverk-editor-liba19.azurewebsites.net"
-
+  // let baseUrl = window.location.href.includes("localhost") ?
+  //       "http://localhost:1337" :
+  //       "https://jsramverk-editor-liba19.azurewebsites.net"
+  let baseUrl = "https://jsramverk-editor-liba19.azurewebsites.net"
 
   export default {
     props: ['document'],
