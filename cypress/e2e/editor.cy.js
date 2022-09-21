@@ -11,12 +11,11 @@ describe("Test editor-app", () => {
   });
 
   it(`When a user click on the button New Document the page should 
-      show an input-field with the document name, a ck-editor,
-      a button with text Save and a button with text Show all documents`, () => {
+      show an input-field with the document name, a ck-editor
+      and a button with text Show all documents`, () => {
     cy.contains("button", "New Document").click();
     cy.get("input").should("have.value", "New Document");
     cy.get(".ck-editor");
-    cy.contains("button", "Save");
     cy.contains("button", "Show all documents");
   });
 

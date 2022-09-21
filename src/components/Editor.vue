@@ -1,10 +1,12 @@
 <script>
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { io } from 'socket.io-client';
 
 // let baseUrl = window.location.href.includes("localhost") ?
 //       "http://localhost:1337" :
 //       "https://jsramverk-editor-liba19.azurewebsites.net"
 let baseUrl = "https://jsramverk-editor-liba19.azurewebsites.net";
+let socket;
 
 export default {
   props: ["document"],
@@ -26,25 +28,30 @@ export default {
       },
     };
   },
-  methods: {
-    async save() {
-      const response = await fetch(`${baseUrl}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          _id: this.document._id,
-          name: this.document.name,
-          content: this.document.content,
-        }),
-        headers: {
-          "Content-type": "application/json",
-        },
-      });
-      if (response.status === 500) {
-        const result = await response.json();
-        console.log(result.errors);
-      }
-    },
+  created() {
+    this.connect()
   },
+  beforeUnmount() {
+    this.disconnect();
+  },
+  methods: {
+    connect() {
+      socket = io(baseUrl)
+      
+      socket.emit("create", this.document._id)
+      
+      socket.on("editDoc", (document) => {
+        this.document.content = document.content
+        this.document.name = document.name
+      });
+    },
+    disconnect() {
+      socket.disconnect()
+    },
+    async save() {
+      socket.emit("editDoc", this.document);
+    },
+  }
 };
 </script>
 
@@ -57,7 +64,6 @@ export default {
       :config="editorConfig"
       @input="save()"
     ></ckeditor>
-    <button class="button is-success" @click="save">Save</button>
   </div>
 </template>
 
