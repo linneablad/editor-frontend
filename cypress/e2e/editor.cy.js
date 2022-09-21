@@ -21,6 +21,7 @@ describe("Test editor-app", () => {
 
   it(`A user should be able to edit the document name`, () => {
     cy.get("input").clear().type("Cypress Test").trigger("change");
+    cy.wait(3000);
     cy.get("input").should("have.value", "Cypress Test");
   });
 
