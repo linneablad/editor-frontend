@@ -17,27 +17,28 @@
     },
     data() {
       return {
-        editDoc: '',
+        // editDoc: '',
       }
     },
     mounted() {
       this.store.fetchDocs()
+      this.store.getEditDoc()
     },
-    watch: { 
-      'store.editDoc': {
-        handler() {
-          this.editDoc = this.store.getEditDoc()
-        },
-      immediate: true,
-      },
-    },
+    // watch: { 
+    //   'store.editDoc': {
+    //     handler() {
+    //       this.editDoc = this.store.getEditDoc()
+    //     },
+    //   immediate: true,
+    //   },
+    // },
     methods: {
       async newDoc() {
-        const _id = await this.store.newDoc()
-        this.store.setEditDoc(_id)
+        const newDoc = await this.store.newDoc()
+      this.store.setEditDoc(newDoc)
       },
       async showAll() {
-        this.store.setEditDoc('')
+        this.store.setEditDoc({})
         await this.store.fetchDocs()
       },
     },
@@ -46,7 +47,7 @@
   
   <template>
     <div>
-      <div class="block" v-if="editDoc === null || editDoc.length === 0">
+      <div class="block" v-if="store.editDoc === null || Object.keys(store.editDoc).length === 0">
           <h1>All documents</h1>
           <button class="button is-primary" @click="newDoc()">
             New Document
@@ -65,7 +66,7 @@
               <td v-if="document.owner === authStore.isLoggedIn">Me</td>
               <td v-else>{{document.owner}}</td>
               <td>
-                <button @click="store.setEditDoc(document._id)" class="button is-link edit">
+                <button @click="store.fetchDoc(document._id)" class="button is-link edit">
                   Edit
                 </button>
                 <button v-if="document.owner === authStore.isLoggedIn"
@@ -80,7 +81,7 @@
         <button @click="showAll()" class="button is-link">
           Show all documents
         </button>
-        <Editor :docId="editDoc" />
+        <Editor :document="store.editDoc" />
       </div>
     </div>
   </template>

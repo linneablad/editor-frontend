@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { useStore } from './index.js'
 
 let baseUrl = "https://jsramverk-editor-liba19.azurewebsites.net";
-// let baseUrl = "http://localhost:1337";
+//let baseUrl = "http://localhost:1337";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({

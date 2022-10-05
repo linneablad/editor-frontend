@@ -1,39 +1,74 @@
 import { defineStore } from 'pinia'
 
 let baseUrl = "https://jsramverk-editor-liba19.azurewebsites.net";
-// let baseUrl = "http://localhost:1337";
+//let baseUrl = "http://localhost:1337";
 
 export const useStore = defineStore("main", {
   state: () => ({
     documents: [],
-    editDoc: ""
+    editDoc: {}
   }),
   actions: {
     getEditDoc() {
-      this.editDoc = sessionStorage.getItem('editDoc')
+      this.editDoc = JSON.parse(sessionStorage.getItem('editDoc'))
       return this.editDoc
     },
-    setEditDoc(docId) {
-      this.editDoc = docId
-      sessionStorage.setItem('editDoc', docId)
+    setEditDoc(document) {
+      this.editDoc = document
+      sessionStorage.setItem('editDoc', JSON.stringify(document))
     },
     async fetchDocs() {
-      const response = await fetch(`${baseUrl}/`, {
-        credentials: 'include'
+      const response = await fetch(`${baseUrl}/graphql`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          query: `{
+            documents {
+              _id,
+              name,
+              owner
+            }
+          }`
+        })
       })
       const result = await response.json()
-      console.log(result)
+      console.log(result.data.documents)
       this.documents = result.data.documents
     },
-    getDoc(docId) {
-      let doc = {}
-
-      this.documents.map((object) => {
-        if (object._id == docId) {
-          doc = object
-        }
+    async fetchDoc(docId) {
+      const response = await fetch(`${baseUrl}/graphql`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          query: `{
+            document(docId: "${docId}") {
+              _id,
+              name,
+              owner,
+              content,
+              allowedUsers {
+                email
+              }
+            }
+          }`
+        })
       })
-      return doc
+      const result = await response.json()
+      if (response.status !== 200) {
+        console.log(result.errors)
+      }
+      else {
+        console.log(result.data)
+        this.setEditDoc(result.data.document)
+      }
     },
     async newDoc() {
       const response = await fetch(`${baseUrl}/`, {

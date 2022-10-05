@@ -6,10 +6,10 @@
   
   let socket
   let baseUrl = "https://jsramverk-editor-liba19.azurewebsites.net";
-  //let baseUrl = "http://localhost:1337";
+//let baseUrl = "http://localhost:1337";
   
   export default {
-    props: ["docId"],
+    props: ["document"],
     setup() {
     const store = useStore()
     const authStore = useAuthStore()
@@ -20,7 +20,6 @@
   },
     data() {
       return {
-        document: {},
         editor: ClassicEditor,
         editorConfig: {
           toolbar: [
@@ -43,14 +42,14 @@
     beforeUnmount() {
       this.disconnect()
     },
-    watch: {
-      "store.documents": {
-        handler() {
-          this.document = this.store.getDoc(this.docId)
-        },
-        immediate: true,
-      },
-    },
+    // watch: {
+    //   "store.documents": {
+    //     handler() {
+    //       this.document = this.store.getDoc(this.docId)
+    //     },
+    //     immediate: true,
+    //   },
+    // },
     methods: {
       connect() {
         socket = io(baseUrl)
