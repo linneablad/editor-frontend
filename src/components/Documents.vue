@@ -1,7 +1,7 @@
 <script>
   import { useStore } from "../stores/index"
   import { useAuthStore } from "../stores/auth"
-  import Editor from "./Editor.vue"
+  import Editor from "./editor/Editor.vue"
   
   export default {
     components: {
@@ -15,27 +15,14 @@
         authStore
       }
     },
-    data() {
-      return {
-        // editDoc: '',
-      }
-    },
     mounted() {
       this.store.fetchDocs()
       this.store.getEditDoc()
     },
-    // watch: { 
-    //   'store.editDoc': {
-    //     handler() {
-    //       this.editDoc = this.store.getEditDoc()
-    //     },
-    //   immediate: true,
-    //   },
-    // },
     methods: {
       async newDoc() {
         const newDoc = await this.store.newDoc()
-      this.store.setEditDoc(newDoc)
+        this.store.setEditDoc(newDoc)
       },
       async showAll() {
         this.store.setEditDoc({})
@@ -81,7 +68,7 @@
         <button @click="showAll()" class="button is-link">
           Show all documents
         </button>
-        <Editor :document="store.editDoc" />
+        <Editor :doc="store.editDoc" />
       </div>
     </div>
   </template>

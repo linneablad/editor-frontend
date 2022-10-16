@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia'
+import { io } from "socket.io-client";
+
+let socket;
 
 let baseUrl = "https://jsramverk-editor-liba19.azurewebsites.net";
 //let baseUrl = "http://localhost:1337";
@@ -54,6 +57,7 @@ export const useStore = defineStore("main", {
               name,
               owner,
               content,
+              code,
               allowedUsers {
                 email
               }
@@ -77,6 +81,7 @@ export const useStore = defineStore("main", {
         body: JSON.stringify({
           name: "New Document",
           content: "",
+          code: false,
           allowedUsers: []
         }),
         headers: {
@@ -89,7 +94,7 @@ export const useStore = defineStore("main", {
       }
       else {
         await this.fetchDocs()
-        return result.data._id
+        return result.data
       }
     },
     async deleteDoc(docId) {
@@ -125,7 +130,37 @@ export const useStore = defineStore("main", {
         const result = await response.json()
         console.log(result.errors)
       }
-      await this.fetchDocs()
+      await this.fetchDoc(document._id)
     },
+    socketConnect(document) {
+      socket = io(`${baseUrl}`);
+
+      socket.emit("create", document._id);
+
+      socket.on("editDoc", (document) => {
+        this.setEditDoc(document)
+      });
+    },
+    socketDisconnect() {
+      socket.disconnect();
+    },
+    socketUpdate(document) {
+      socket.emit("editDoc", document);
+    },
+    async runCode(code) {
+      const data = {
+        code: window.btoa(code)
+      }
+      const response = await fetch("https://execjs.emilfolino.se/code", {
+        body: JSON.stringify(data),
+        headers: {
+            'content-type': 'application/json'
+        },
+        method: 'POST'
+    })
+    const result = await response.json()
+    const decodedOutput = window.atob(result.data);
+    return decodedOutput;
+    }
   },
 })

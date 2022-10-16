@@ -12,6 +12,8 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^35.0.1",
     "@ckeditor/ckeditor5-vue": "^4.0.1",
+    "jspdf": "^2.5.1",
+    "monaco-editor-vue3": "^0.1.6",
     "pinia": "^2.0.22",
     "socket.io-client": "^4.5.2",
     "vue": "^3.2.37",
